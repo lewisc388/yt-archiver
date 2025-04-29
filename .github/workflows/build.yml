@@ -1,0 +1,61 @@
+name: Build YouTube Downloader
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Build binary
+        run: |
+          pyinstaller downloader.py --name ytdownload.bin --onefile --noconfirm --clean
+
+      - name: Upload Linux build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytdownload-linux
+          path: dist/ytdownload.bin
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller downloader.py --name ytdownload.exe --onefile --noconfirm --clean
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: ytdownload-windows
+          path: dist/ytdownload.exe

@@ -5,7 +5,7 @@ a = Analysis(
     ['downloader.py'],
     pathex=[],
     binaries=[],
-    datas=[('/home/mainuser/Documents/yt-archiver/ffmpeg/ffmpeg', 'ffmpeg'), ('/home/mainuser/Documents/yt-archiver/ffmpeg/ffprobe', 'ffmpeg')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

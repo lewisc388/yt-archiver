@@ -1,22 +1,29 @@
 import PyInstaller.__main__
 import os
+#import shutil
 import platform
 
-is_windows = platform.system() == "Windows"
-ffmpeg_dir = os.path.abspath("ffmpeg")
+def build(target_platform):
+    name = "ytdownload.exe" if target_platform == "windows" else "ytdownload"
 
-# ffmpeg and ffprobe binary names
-ffmpeg_bin = "ffmpeg.exe" if is_windows else "ffmpeg"
-ffprobe_bin = "ffprobe.exe" if is_windows else "ffprobe"
+    print(f"[+] Building for {target_platform.title()}...")
 
-PyInstaller.__main__.run([
-    "downloader.py",
-    "--name=ytdownload",
-    "--onefile",
-    "--add-data=" + os.path.join(ffmpeg_dir, ffmpeg_bin) + os.pathsep + "ffmpeg",
-    "--add-data=" + os.path.join(ffmpeg_dir, ffprobe_bin) + os.pathsep + "ffmpeg",
-    "--clean",
-    "--noconfirm",
-])
+    PyInstaller.__main__.run([
+        "downloader.py",
+        "--name=" + name,
+        "--onefile",
+        "--noconfirm",
+        "--clean"
+    ])
 
+    dist_file = os.path.join("dist", name)
+    if os.path.exists(dist_file):
+        print(f"[✓] Built: {dist_file}")
+    else:
+        print(f"[✗] Build failed for {target_platform}")
 
+if __name__ == "__main__":
+    system = platform.system().lower()
+
+    # Build for current system
+    build(system)
